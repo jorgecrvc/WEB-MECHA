@@ -335,6 +335,16 @@ body::after {
 }
 .paso p { font-size: .92rem; color: var(--gris-2); margin: .5rem 0 0; }
 
+/* ---------- test cta ---------- */
+.test-cta {
+  margin-top: 3rem; text-align: center;
+  padding-top: 2rem; border-top: 1px solid rgba(110,21,5,.3);
+}
+.test-cta p {
+  font-family: var(--display); font-size: 1.1rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--gris-2); margin-bottom: 1.2rem;
+}
+
 /* ---------- sobre ---------- */
 .sobre { padding-block: var(--space); border-top: 1px solid rgba(110,21,5,.3); }
 .sobre__grid { display: grid; gap: 2.5rem; align-items: center; }

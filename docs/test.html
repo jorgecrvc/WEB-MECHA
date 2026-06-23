@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Test del Demonio — Mecha Tattoo · Descubre tu estilo</title>
+<meta name="description" content="Descubre tu estilo de tatuaje ideal con el test de Mecha. Blackwork, ornamental, orgánico, tribal, black & gray o flash artístico.">
+<meta property="og:title" content="El Test del Demonio — Mecha Tattoo">
+<meta property="og:description" content="Descubre tu estilo ideal, en qué zona luce mejor y un precio orientativo.">
+<meta property="og:image" content="assets/img/og-cover.jpg">
+<link rel="icon" href="assets/img/favicon-32.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@300;400;600;700&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blood:#4B0C00;
+    --blood-deep:#2e0700;
+    --ink:#06090b;
+    --ink2:#0b1014;
+    --skin:#EFC29A;
+    --skin-soft:#d9a87f;
+    --bone:#dcdcdc;
+    --card:#0e1a1f;
+    --card2:#11181d;
+    --line:#1e1e1e;
+    --line2:#2a2018;
+    --txt:#dcdcdc;
+    --muted:#9aa0a0;
+    --accent:#EFC29A;
+    --accent2:#6e1505;
+    --ok:#3fb98a;
+    --radius:14px;
+    --shadow:0 14px 50px rgba(0,0,0,.6);
+    --head:'Yanone Kaffeesatz',sans-serif;
+    --body:'Montserrat','Segoe UI',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--body);font-weight:300;
+    color:var(--txt);line-height:1.6;min-height:100vh;position:relative;
+    background:radial-gradient(900px 500px at 50% -8%,#5c1102 0%,var(--blood) 34%,var(--blood-deep) 70%,var(--ink) 100%);
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.06;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .watermark{
+    position:fixed;right:-60px;top:50%;transform:translateY(-50%);
+    width:520px;max-width:60vw;opacity:.04;z-index:0;pointer-events:none;filter:grayscale(1);
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:24px 18px 80px;position:relative;z-index:1}
+
+  /* BACK LINK */
+  .back-link{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--head);font-size:13px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;margin-bottom:20px;
+    transition:.18s;
+  }
+  .back-link:hover{color:var(--skin)}
+
+  /* HEADER */
+  header.hero{text-align:center;padding:10px 10px 6px}
+  .logo-mark{width:100px;height:auto;margin:0 auto 6px;display:block;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5))}
+  .wordmark{
+    font-family:var(--head);font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+    font-size:clamp(30px,8vw,52px);color:var(--skin);line-height:1;margin-left:.22em;
+  }
+  .handle{
+    display:inline-block;margin-top:8px;font-family:var(--head);font-weight:600;letter-spacing:.32em;
+    text-transform:uppercase;font-size:12px;color:var(--bone);
+    border:1px solid var(--line2);border-radius:99px;padding:5px 16px;background:rgba(0,0,0,.25);
+  }
+  .handle .dot{color:var(--accent2)}
+  .loc{margin-top:10px;font-family:var(--head);letter-spacing:.4em;font-size:11px;color:var(--muted);text-transform:uppercase}
+  .test-name{
+    margin-top:12px;font-family:var(--head);font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    font-size:clamp(15px,3.4vw,19px);color:var(--accent2);
+  }
+  h1{font-family:var(--head);font-weight:700;font-size:clamp(28px,6vw,48px);line-height:1.02;margin:18px 0 12px;text-transform:uppercase;letter-spacing:.01em}
+  h1 span{color:var(--accent);font-style:italic}
+  .sub{color:var(--muted);font-size:15px;max-width:520px;margin:0 auto;font-weight:300}
+  .divider{display:flex;align-items:center;justify-content:center;gap:14px;margin:22px auto 4px;max-width:320px;color:var(--accent2)}
+  .divider::before,.divider::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,var(--line2),transparent)}
+  .divider .d{font-size:13px;color:var(--skin-soft)}
+
+  /* PROGRESO */
+  .progress{display:flex;gap:5px;margin:22px auto 14px;max-width:600px}
+  .progress .seg{height:4px;flex:1;background:rgba(0,0,0,.35);border-radius:99px;transition:.4s;border:1px solid var(--line)}
+  .progress .seg.on{background:linear-gradient(90deg,var(--accent2),var(--accent));border-color:transparent}
+
+  /* CARD */
+  .card{
+    background:linear-gradient(180deg,rgba(14,26,31,.96),rgba(4,12,15,.98));
+    border:1px solid var(--line2);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:32px 26px;margin-top:16px;position:relative;overflow:hidden;
+  }
+  .card::after{content:"";position:absolute;inset:0;border-radius:var(--radius);pointer-events:none;
+    box-shadow:inset 0 0 0 1px rgba(239,194,154,.05)}
+  .step{display:none;animation:fade .5s ease}
+  .step.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  .qnum{font-family:var(--head);color:var(--accent);font-weight:600;font-size:14px;letter-spacing:.22em;text-transform:uppercase}
+  .qtitle{font-family:var(--head);font-size:28px;font-weight:600;margin:4px 0 22px;line-height:1.08}
+
+  .opts{display:grid;gap:10px}
+  .opt{
+    background:var(--card2);border:1.5px solid var(--line2);border-radius:11px;padding:15px 17px;
+    cursor:pointer;display:flex;align-items:center;gap:14px;transition:.18s;font-size:15px;font-weight:400;
+  }
+  .opt:hover{border-color:var(--accent);transform:translateX(4px);background:#17282f}
+  .opt.sel{border-color:var(--accent);background:rgba(239,194,154,.1);box-shadow:0 0 0 1px var(--accent)}
+
+  .nav{display:flex;justify-content:space-between;margin-top:26px;gap:12px}
+  .btn{border:none;border-radius:99px;padding:13px 28px;font-size:13px;font-weight:600;cursor:pointer;
+    transition:.18s;font-family:var(--head);letter-spacing:.12em;text-transform:uppercase}
+  .btn-primary{background:linear-gradient(90deg,var(--accent2),#a52310);color:var(--skin);box-shadow:0 6px 20px rgba(110,21,5,.4)}
+  .btn-primary:hover{filter:brightness(1.12);transform:translateY(-1px)}
+  .btn-primary:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--line2)}
+  .btn-ghost:hover{color:var(--skin);border-color:var(--skin-soft)}
+  .btn-wa{background:#1f7a4d;color:#eafff2}
+  .btn-wa:hover{filter:brightness(1.1);transform:translateY(-1px)}
+  .btn-mail{background:var(--card2);color:var(--txt);border:1.5px solid var(--line2)}
+  .btn-mail:hover{border-color:var(--skin-soft)}
+
+  /* GATE */
+  .gate-perks{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0 22px}
+  .gate-perks span{font-family:var(--head);letter-spacing:.06em;font-size:13px;color:var(--skin);background:rgba(239,194,154,.08);border:1px solid var(--line2);padding:6px 14px;border-radius:99px}
+  .gate-btn{width:100%;margin-top:6px;padding:16px;font-size:15px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-family:var(--head);font-weight:600;margin-bottom:8px;font-size:15px;letter-spacing:.05em;text-transform:uppercase;color:var(--skin)}
+  input[type=text],input[type=email],input[type=tel],textarea{
+    width:100%;background:rgba(0,0,0,.35);border:1.5px solid var(--line2);border-radius:10px;
+    padding:13px 15px;color:var(--txt);font-size:15px;font-family:var(--body);font-weight:300}
+  input::placeholder,textarea::placeholder{color:#6f6356}
+  input:focus,textarea:focus{outline:none;border-color:var(--accent)}
+  textarea{resize:vertical;min-height:72px}
+  .err{color:#ff7a6b;font-size:13px;margin-top:6px;display:none}
+
+  /* RESULTADO */
+  .result-badge{text-align:center;margin-bottom:6px}
+  .result-badge .label{font-family:var(--head);color:var(--muted);font-size:13px;letter-spacing:.25em;text-transform:uppercase}
+  .result-name{font-family:var(--head);font-size:42px;font-weight:700;color:var(--accent);text-align:center;margin:2px 0 6px;text-transform:uppercase;letter-spacing:.02em;line-height:1}
+  .result-tag{text-align:center;color:var(--skin-soft);margin-bottom:20px;font-style:italic}
+  .result-desc{background:var(--card2);border-left:3px solid var(--accent2);border-radius:10px;padding:16px 18px;margin-bottom:16px}
+  .meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+  @media(max-width:560px){.meta-grid{grid-template-columns:1fr}}
+  .meta{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:14px 16px}
+  .meta h4{font-family:var(--head);font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:var(--accent);margin-bottom:6px}
+  .meta p{font-size:14px;color:var(--txt);font-weight:300}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .chip{background:rgba(239,194,154,.1);border:1px solid var(--line2);color:var(--skin);padding:5px 13px;border-radius:99px;font-size:13px}
+  .alt{font-size:14px;color:var(--muted);text-align:center;margin-top:16px}
+  .alt b{color:var(--skin)}
+  .share-tip{margin-top:16px;background:rgba(239,194,154,.07);border:1px dashed var(--line2);border-radius:11px;padding:13px 16px;font-size:14px;color:var(--skin-soft);text-align:center}
+  .share-tip b{color:var(--skin)}
+
+  /* ZONAS */
+  .zones{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+  .zone{background:var(--card2);border:1.5px solid var(--line2);border-radius:11px;padding:13px 11px;cursor:pointer;text-align:center;transition:.18s}
+  .zone:hover{border-color:var(--accent)}
+  .zone.sel{border-color:var(--accent);background:rgba(239,194,154,.1)}
+  .zone .zn{font-family:var(--head);font-weight:600;font-size:16px;letter-spacing:.03em}
+  .zone .pain{font-size:11px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.1em}
+  .dots{margin-top:4px;font-size:12px;letter-spacing:2px}
+  .zone-detail{background:var(--card2);border-left:3px solid var(--accent2);border-radius:10px;padding:15px 17px;margin-top:14px;display:none}
+  .zone-detail.show{display:block}
+
+  /* ESTIMADOR */
+  .seg-control{display:flex;gap:8px;flex-wrap:wrap}
+  .seg-btn{flex:1;min-width:90px;background:var(--card2);border:1.5px solid var(--line2);color:var(--txt);border-radius:9px;padding:10px 8px;cursor:pointer;font-size:13px;transition:.18s;text-align:center;font-family:var(--body);font-weight:400}
+  .seg-btn.sel{border-color:var(--accent);background:rgba(239,194,154,.12);color:var(--accent);font-weight:600}
+  .estimate-box{background:linear-gradient(135deg,rgba(110,21,5,.25),rgba(4,12,15,.6));border:1px solid var(--line2);border-radius:13px;padding:22px;text-align:center;margin-top:8px}
+  .estimate-box .price{font-family:var(--head);font-size:38px;font-weight:700;color:var(--accent);letter-spacing:.02em}
+  .estimate-box .sessions{color:var(--skin-soft);margin-top:2px}
+  .disclaimer{font-size:12px;color:var(--muted);margin-top:12px;font-style:italic}
+
+  /* LEAD */
+  .lead-intro{text-align:center;margin-bottom:16px}
+  .summary{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:15px 17px;margin-bottom:18px;font-size:14px}
+  .summary div{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line)}
+  .summary div:last-child{border:none}
+  .summary span:first-child{color:var(--muted)}
+  .summary span:last-child{font-weight:500;color:var(--skin);text-align:right}
+  .send-row{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
+  .send-row .btn{flex:1;min-width:200px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px}
+  .privacy{font-size:12px;color:var(--muted);text-align:center;margin-top:14px}
+
+  /* FOOTER */
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:38px}
+  footer .fwork{font-family:var(--head);letter-spacing:.2em;text-transform:uppercase;color:var(--skin);font-size:15px}
+  footer .ln{margin-top:4px}
+  footer .logo-foot{width:48px;opacity:.5;margin-bottom:10px;filter:grayscale(1)}
+</style>
+</head>
+<body>
+
+<img class="watermark" src="assets/img/logo-demonio.png" alt="">
+
+<div class="wrap">
+
+  <a href="index.html" class="back-link">← Volver a la web</a>
+
+  <header class="hero">
+    <img class="logo-mark" src="assets/img/logo-demonio.png" alt="Mecha Tattoo">
+    <div class="wordmark">Mecha</div>
+    <div class="handle">@mecha<span class="dot">.</span>ttt</div>
+    <div class="loc">Profano Tattoo · Murcia</div>
+    <div class="test-name">El Test del Demonio</div>
+    <h1>Descubre <span>tu estilo</span><br>de tatuaje</h1>
+    <p class="sub">Déjanos tus datos para desbloquear el test: descubre tu estilo ideal, en qué zona luce mejor y un precio orientativo.</p>
+    <div class="divider"><span class="d">&#9670;</span></div>
+  </header>
+
+  <div class="progress" id="progress"></div>
+
+  <div class="card">
+
+    <!-- PUERTA -->
+    <div class="step active" id="stepGate">
+      <div class="qtitle" style="text-align:center;margin-bottom:6px">Desbloquea tu asesoría</div>
+      <p style="color:var(--muted);text-align:center;max-width:430px;margin:0 auto 4px">Déjanos tus datos y accede al test. Te diremos tu estilo, la mejor zona y un precio orientativo &mdash; y te contactamos para tu <b style="color:var(--skin)">consulta de diseño gratis</b>.</p>
+      <div class="gate-perks">
+        <span>Tu estilo ideal</span>
+        <span>Mejor zona</span>
+        <span>Precio orientativo</span>
+      </div>
+      <div class="field"><input type="text" id="gName" placeholder="Tu nombre*"></div>
+      <div class="field"><input type="email" id="gEmail" placeholder="Tu email*"></div>
+      <div class="field"><input type="tel" id="gPhone" placeholder="Tu WhatsApp / teléfono*"></div>
+      <div class="field"><input type="text" id="gInsta" placeholder="Tu Instagram (p.ej. @tunombre)"></div>
+      <div class="err" id="gateErr">Completa tu nombre, un email válido y tu teléfono para continuar.</div>
+      <button class="btn btn-primary gate-btn" onclick="unlock()">Desbloquear el test &rarr;</button>
+      <p class="privacy">* Campos obligatorios. Tus datos solo se usan para contactarte sobre tu tatuaje. No spam.</p>
+    </div>
+
+    <div id="quizContainer"></div>
+
+    <!-- RESULTADO -->
+    <div class="step" id="stepResult">
+      <div class="result-badge"><div class="label">Tu estilo recomendado</div></div>
+      <div class="result-name" id="resName">—</div>
+      <div class="result-tag" id="resTag"></div>
+      <div class="result-desc" id="resDesc"></div>
+      <div class="meta-grid">
+        <div class="meta"><h4>Ideal para</h4><p id="resIdeal"></p></div>
+        <div class="meta"><h4>Mantenimiento</h4><p id="resMaint"></p></div>
+      </div>
+      <div class="meta"><h4>Motivos que suelen funcionar</h4><div class="chips" id="resChips"></div></div>
+      <div class="alt" id="resAlt"></div>
+      <div class="share-tip">Haz captura de tu resultado y compártelo en tus stories etiquetando a <b>@mecha.ttt</b></div>
+      <div class="nav">
+        <button class="btn btn-ghost" onclick="restart()">Repetir test</button>
+        <button class="btn btn-primary" onclick="goTo('stepZone')">Elegir zona del cuerpo &rarr;</button>
+      </div>
+    </div>
+
+    <!-- ZONA -->
+    <div class="step" id="stepZone">
+      <div class="qnum">Paso · Zona</div>
+      <div class="qtitle">¿Dónde te lo imaginas?</div>
+      <p style="color:var(--muted);margin-bottom:16px;font-size:14px">Cada zona tiene un nivel de dolor y de durabilidad distintos. Toca una para ver los detalles.</p>
+      <div class="zones" id="zones"></div>
+      <div class="zone-detail" id="zoneDetail"></div>
+      <div class="nav">
+        <button class="btn btn-ghost" onclick="goTo('stepResult')">&larr; Volver</button>
+        <button class="btn btn-primary" id="zoneNext" disabled onclick="goTo('stepEstimate')">Estimar precio &rarr;</button>
+      </div>
+    </div>
+
+    <!-- ESTIMADOR -->
+    <div class="step" id="stepEstimate">
+      <div class="qnum">Paso · Estimación</div>
+      <div class="qtitle">Precio y sesiones orientativos</div>
+      <div class="field">
+        <label>Tamaño aproximado</label>
+        <div class="seg-control" id="sizeControl"></div>
+      </div>
+      <div class="field">
+        <label>Nivel de detalle</label>
+        <div class="seg-control" id="detailControl"></div>
+      </div>
+      <div class="estimate-box">
+        <div class="price" id="estPrice">—</div>
+        <div class="sessions" id="estSessions"></div>
+        <div class="disclaimer">* Estimación orientativa. El precio final lo confirma Mecha según tu diseño concreto.</div>
+      </div>
+      <div class="nav">
+        <button class="btn btn-ghost" onclick="goTo('stepZone')">&larr; Volver</button>
+        <button class="btn btn-primary" onclick="goToLead()">Recibir mi propuesta &rarr;</button>
+      </div>
+    </div>
+
+    <!-- LEAD -->
+    <div class="step" id="stepLead">
+      <div class="lead-intro">
+        <div class="qtitle" style="margin-bottom:4px">Tu briefing está listo</div>
+        <p style="color:var(--muted)">Envíanoslo y te respondemos en menos de 24h para tu consulta de diseño gratis. Plazas limitadas cada mes.</p>
+      </div>
+      <div class="summary" id="leadSummary"></div>
+      <div class="field"><textarea id="fIdea" placeholder="Cuéntanos tu idea (opcional): motivo, referencias, fecha…"></textarea></div>
+      <div class="err" id="leadErr">Completa al menos tu nombre y WhatsApp o email.</div>
+      <div class="send-row">
+        <button class="btn btn-wa" onclick="sendWhatsApp()">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Enviar por WhatsApp
+        </button>
+        <button class="btn btn-mail" onclick="sendEmail()">Enviar por email</button>
+      </div>
+      <p class="privacy">Tus datos solo se usan para contactarte sobre tu tatuaje. No spam.</p>
+    </div>
+
+  </div>
+
+  <footer>
+    <img class="logo-foot" src="assets/img/logo-demonio.png" alt="">
+    <div class="fwork">Mecha</div>
+    <div class="ln">Profano Tattoo · Murcia</div>
+    <div class="ln" style="margin-top:6px;opacity:.7"><a href="index.html" style="color:inherit;text-decoration:none;">← Volver a la web</a></div>
+  </footer>
+
+</div>
+
+<script>
+const CONFIG = {
+  studio:   "Mecha",
+  whatsapp: "34611645333",
+  email:    "mecha.tatt@gmail.com",
+  currency: "€",
+  minDay:   150,
+};
+
+const STYLES = {
+  blackwork:{name:"Blackwork Ilustrativo",tag:"Negro sólido, alto impacto visual",
+    desc:"Grandes masas de tinta negra, contrastes potentes y diseños ilustrativos con carácter. Envejece increíblemente bien gracias a la saturación. Visualmente muy fuerte y con identidad propia.",
+    ideal:"Quien busca un tatuaje llamativo, duradero y con mucha personalidad",
+    maint:"Muy bajo: el negro sólido es el estilo que mejor aguanta el paso del tiempo",
+    motifs:["Ilustración oscura","Patrones gráficos","Siluetas","Ornamental negro","Cobertura"]},
+  ornamental:{name:"Ornamental",tag:"Decorativo, simétrico y detallado",
+    desc:"Patrones decorativos de alta complejidad, inspirados en la orfebrería y el arte ornamental. Simetría, detalle y elegancia oscura. Piezas que lucen como joyas en la piel.",
+    ideal:"Quien valora la precisión, el detalle y un acabado sofisticado",
+    maint:"Bajo: líneas definidas y negro sólido garantizan buena durabilidad",
+    motifs:["Mandalas oscuros","Patrones geométricos","Cenefas","Marcos ornamentales","Simetría"]},
+  organico:{name:"Orgánico",tag:"Formas fluidas inspiradas en la naturaleza",
+    desc:"Tatuajes con formas vivas, fluidas y naturales. Plantas, cuerpos, texturas y movimiento. Una estética que respira y se adapta a la anatomía de forma muy natural.",
+    ideal:"Quien busca algo vivo, dinámico y con una estética natural y oscura",
+    maint:"Bajo-medio: líneas fluidas que envejecen con gracia",
+    motifs:["Botanica oscura","Criaturas","Raíces","Texturas naturales","Anatomía"]},
+  tribal:{name:"Tribal",tag:"Patrones ancestrales, negro contundente",
+    desc:"Formas geométricas y patrones ancestrales de trazo grueso y presencia máxima. Un lenguaje visual primitivo y poderoso que convierte el cuerpo en símbolo.",
+    ideal:"Quien quiere algo con energía primaria, simbólica y muy visual",
+    maint:"Muy bajo: trazo grueso y negro sólido = máxima durabilidad",
+    motifs:["Patrones polinesios","Geometría ancestral","Bandas","Formas tribales","Símbolos"]},
+  blackgray:{name:"Black & Gray",tag:"Profundidad y matices en grises",
+    desc:"Tatuajes en escala de grises con transiciones suaves, volumen y profundidad. Una técnica versátil que permite tanto ilustración como realismo con una estética muy elegante.",
+    ideal:"Quien busca profundidad visual y un acabado artístico sofisticado",
+    maint:"Medio: cuidar el sol es clave para preservar los grises con el tiempo",
+    motifs:["Ilustración en grises","Retrato artístico","Paisajes oscuros","Criaturas","Sombras y luz"]},
+  flash:{name:"Flash Artístico",tag:"Diseños únicos listos para tatuar",
+    desc:"Piezas diseñadas por Mecha con identidad propia, listas para ser tatuadas. Cada flash es una obra en sí misma: irrepetible, con carácter y con la estética característica del autor.",
+    ideal:"Quien quiere algo de Mecha con identidad propia, sin esperar un diseño a medida",
+    maint:"Muy bajo: piezas diseñadas para durar y tener presencia con el tiempo",
+    motifs:["Piezas exclusivas","Arte del autor","Edición limitada","Identidad Mecha","Sin igual"]},
+};
+
+const STYLE_ORDER = ["blackwork","ornamental","organico","tribal","blackgray","flash"];
+
+const QUESTIONS = [
+  {q:"¿Es tu primer tatuaje?",
+   opts:[
+    {t:"Sí, es el primero",s:{flash:2,blackgray:1}},
+    {t:"Tengo alguno",s:{organico:1,ornamental:1,blackwork:1}},
+    {t:"Tengo varios / colecciono",s:{tribal:2,blackwork:2,ornamental:1}},
+   ]},
+  {q:"¿Qué tamaño tienes en mente?",
+   opts:[
+    {t:"Pequeño y directo",s:{flash:3,blackgray:1}},
+    {t:"Mediano, que se vea bien",s:{ornamental:2,organico:2,blackgray:1}},
+    {t:"Grande / proyecto a largo plazo",s:{blackwork:3,tribal:2,organico:1}},
+   ]},
+  {q:"¿Con qué estética conectas más?",
+   opts:[
+    {t:"Oscura, gráfica y contundente",s:{blackwork:3,tribal:1}},
+    {t:"Decorativa, simétrica y detallada",s:{ornamental:3,blackwork:1}},
+    {t:"Fluida, viva y natural",s:{organico:3,blackgray:1}},
+    {t:"Geométrica y ancestral",s:{tribal:3,blackwork:1}},
+    {t:"Matices y profundidad en grises",s:{blackgray:3,organico:1}},
+    {t:"Un diseño único ya listo",s:{flash:3}},
+   ]},
+  {q:"¿Qué quieres que transmita?",
+   opts:[
+    {t:"Arte puro, sin más",s:{blackwork:2,flash:2}},
+    {t:"Algo de la naturaleza o vivo",s:{organico:3,blackgray:1}},
+    {t:"Un patrón decorativo o símbolo",s:{ornamental:3,tribal:1}},
+    {t:"Algo ancestral e identitario",s:{tribal:3,blackwork:1}},
+    {t:"Una imagen o escena con profundidad",s:{blackgray:3,organico:1}},
+   ]},
+  {q:"¿Qué acabado buscas?",
+   opts:[
+    {t:"Negro sólido, sin matices",s:{blackwork:3,tribal:2}},
+    {t:"Sombras y grises suaves",s:{blackgray:3,organico:1}},
+    {t:"Ornamento muy detallado",s:{ornamental:3}},
+    {t:"Orgánico y espontáneo",s:{organico:2,flash:1}},
+   ]},
+  {q:"¿Para cuándo te lo quieres hacer?",
+   opts:[
+    {t:"Cuanto antes (este mes o el que viene)",s:{flash:1}},
+    {t:"En los próximos 1-3 meses",s:{}},
+    {t:"Aún explorando ideas",s:{}},
+   ]},
+];
+
+const ZONES = [
+  {n:"Antebrazo",pain:1,dur:"Alta",note:"Zona estrella: poco dolor, muy visible y de las que mejor conservan el tatuaje. Ideal para casi cualquier estilo."},
+  {n:"Brazo / Hombro",pain:1,dur:"Alta",note:"Cómoda y duradera. Perfecta para piezas medianas y grandes. Poco roce y buena cicatrización."},
+  {n:"Pantorrilla",pain:2,dur:"Alta",note:"Buena superficie y durabilidad. Dolor moderado. Excelente para piezas grandes y con detalle."},
+  {n:"Muslo",pain:2,dur:"Alta",note:"Mucho espacio y poco dolor en la cara externa. Gran lienzo para diseños grandes y detallados."},
+  {n:"Espalda",pain:2,dur:"Muy alta",note:"Gran lienzo, dolor moderado salvo cerca de columna/omóplatos. Tatuaje muy protegido y duradero."},
+  {n:"Pecho",pain:3,dur:"Alta",note:"Vistoso y con buena durabilidad. Dolor de medio a alto cerca del esternón."},
+  {n:"Costillas",pain:4,dur:"Media",note:"De las zonas más dolorosas. Muy estético pero el roce puede desgastarlo con el tiempo. Para gente decidida."},
+  {n:"Muñeca / Tobillo",pain:2,dur:"Media",note:"Muy visible y discreto a la vez. Mejor para piezas pequeñas; el roce puede pedir retoques."},
+  {n:"Mano / Dedos",pain:3,dur:"Baja",note:"Muy llamativo pero la zona que peor aguanta: mucha regeneración de piel y desgaste. Necesita retoques frecuentes."},
+  {n:"Cuello",pain:3,dur:"Media",note:"Alto impacto visual. Dolor medio-alto. Recomendable cuando ya tienes experiencia con tatuajes."},
+];
+
+const SIZES = [
+  {label:"Pequeño (≈5cm)",mult:1},
+  {label:"Mediano (≈10-15cm)",mult:2.6},
+  {label:"Grande (≈20cm+)",mult:5},
+  {label:"Muy grande / manga",mult:11},
+];
+const DETAILS = [
+  {label:"Simple (línea)",mult:1},
+  {label:"Detalle medio",mult:1.4},
+  {label:"Alto detalle",mult:1.9},
+];
+
+let leadData={name:'',email:'',phone:'',insta:''};
+
+function unlock(){
+  const n=document.getElementById('gName').value.trim();
+  const e=document.getElementById('gEmail').value.trim();
+  const p=document.getElementById('gPhone').value.trim();
+  const ig=document.getElementById('gInsta').value.trim();
+  const emailOk=/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
+  if(!n||!emailOk||!p){document.getElementById('gateErr').style.display='block';return;}
+  document.getElementById('gateErr').style.display='none';
+  leadData={name:n,email:e,phone:p,insta:ig};
+  showQuiz(0);
+}
+
+let answers=[];
+let currentStep=0;
+const state={style:null,zone:null,sizeIdx:null,detailIdx:null};
+
+const quizC=document.getElementById('quizContainer');
+QUESTIONS.forEach((Q,qi)=>{
+  const div=document.createElement('div');
+  div.className='step';
+  div.id='q'+qi;
+  div.innerHTML=`<div class="qnum">Pregunta ${qi+1} de ${QUESTIONS.length}</div><div class="qtitle">${Q.q}</div>
+    <div class="opts">${Q.opts.map((o,oi)=>
+      `<div class="opt" data-q="${qi}" data-o="${oi}"><span>${o.t}</span></div>`
+    ).join('')}</div>
+    <div class="nav">
+      ${qi>0?`<button class="btn btn-ghost" onclick="prevQ(${qi})">&larr; Atrás</button>`:'<span></span>'}
+      <button class="btn btn-primary" id="next${qi}" disabled onclick="nextQ(${qi})">${qi===QUESTIONS.length-1?'Ver mi resultado &rarr;':'Siguiente &rarr;'}</button>
+    </div>`;
+  quizC.appendChild(div);
+});
+
+const totalSteps=QUESTIONS.length+4;
+const progEl=document.getElementById('progress');
+for(let i=0;i<totalSteps;i++){const s=document.createElement('div');s.className='seg';progEl.appendChild(s);}
+function updateProgress(idx){[...progEl.children].forEach((s,i)=>s.classList.toggle('on',i<=idx));}
+updateProgress(-1);
+
+quizC.addEventListener('click',e=>{
+  const opt=e.target.closest('.opt');if(!opt)return;
+  const qi=+opt.dataset.q,oi=+opt.dataset.o;
+  document.querySelectorAll(`.opt[data-q="${qi}"]`).forEach(o=>o.classList.remove('sel'));
+  opt.classList.add('sel');
+  answers[qi]=oi;
+  document.getElementById('next'+qi).disabled=false;
+});
+
+function nextQ(qi){
+  if(qi<QUESTIONS.length-1){showQuiz(qi+1);}
+  else{computeResult();goTo('stepResult');}
+}
+function prevQ(qi){showQuiz(qi-1);}
+function showQuiz(qi){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('q'+qi).classList.add('active');
+  currentStep=qi;updateProgress(qi);
+  window.scrollTo(0,0);
+}
+
+const STEP_INDEX={stepResult:QUESTIONS.length,stepZone:QUESTIONS.length+1,stepEstimate:QUESTIONS.length+2,stepLead:QUESTIONS.length+3};
+function goTo(id){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  updateProgress(STEP_INDEX[id]??0);
+  window.scrollTo(0,0);
+}
+
+function computeResult(){
+  const score={};STYLE_ORDER.forEach(k=>score[k]=0);
+  answers.forEach((oi,qi)=>{
+    const s=QUESTIONS[qi].opts[oi].s;
+    for(const k in s)score[k]+=s[k];
+  });
+  const ranked=STYLE_ORDER.slice().sort((a,b)=>score[b]-score[a]);
+  state.style=ranked[0];
+  const S=STYLES[ranked[0]];
+  document.getElementById('resName').textContent=S.name;
+  document.getElementById('resTag').textContent=S.tag;
+  document.getElementById('resDesc').textContent=S.desc;
+  document.getElementById('resIdeal').textContent=S.ideal;
+  document.getElementById('resMaint').textContent=S.maint;
+  document.getElementById('resChips').innerHTML=S.motifs.map(m=>`<span class="chip">${m}</span>`).join('');
+  const alt=STYLES[ranked[1]];
+  document.getElementById('resAlt').innerHTML=`También podría encajarte: <b>${alt.name}</b> — ${alt.tag.toLowerCase()}.`;
+}
+
+const zonesEl=document.getElementById('zones');
+ZONES.forEach((z,i)=>{
+  const dots='●'.repeat(z.pain)+'<span style="color:var(--line)">'+'●'.repeat(5-z.pain)+'</span>';
+  const div=document.createElement('div');
+  div.className='zone';div.dataset.i=i;
+  div.innerHTML=`<div class="zn">${z.n}</div><div class="pain">Dolor</div><div class="dots" style="color:var(--accent2)">${dots}</div>`;
+  zonesEl.appendChild(div);
+});
+zonesEl.addEventListener('click',e=>{
+  const z=e.target.closest('.zone');if(!z)return;
+  document.querySelectorAll('.zone').forEach(x=>x.classList.remove('sel'));
+  z.classList.add('sel');
+  const i=+z.dataset.i;state.zone=i;
+  const Z=ZONES[i];
+  const det=document.getElementById('zoneDetail');
+  det.classList.add('show');
+  det.innerHTML=`<h4 style="color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">${Z.n}</h4>
+    <p style="font-size:14px;margin-bottom:8px">${Z.note}</p>
+    <p style="font-size:13px;color:var(--muted)">Dolor: <b style="color:var(--txt)">${['','Bajo','Medio-bajo','Medio','Alto','Muy alto'][Z.pain]}</b> · Durabilidad: <b style="color:var(--txt)">${Z.dur}</b></p>`;
+  document.getElementById('zoneNext').disabled=false;
+});
+
+const sizeC=document.getElementById('sizeControl'),detailC=document.getElementById('detailControl');
+SIZES.forEach((s,i)=>{const b=document.createElement('button');b.className='seg-btn';b.textContent=s.label;b.onclick=()=>{state.sizeIdx=i;mark(sizeC,i);calcEstimate();};sizeC.appendChild(b);});
+DETAILS.forEach((d,i)=>{const b=document.createElement('button');b.className='seg-btn';b.textContent=d.label;b.onclick=()=>{state.detailIdx=i;mark(detailC,i);calcEstimate();};detailC.appendChild(b);});
+function mark(c,i){[...c.children].forEach((b,bi)=>b.classList.toggle('sel',bi===i));}
+function calcEstimate(){
+  if(state.sizeIdx==null||state.detailIdx==null)return;
+  const base=CONFIG.minDay;
+  const factor=SIZES[state.sizeIdx].mult*DETAILS[state.detailIdx].mult;
+  let low=Math.round(base*factor*0.85),high=Math.round(base*factor*1.25);
+  low=Math.round(low/5)*5;high=Math.round(high/10)*10;
+  document.getElementById('estPrice').textContent=`${CONFIG.currency}${low} – ${CONFIG.currency}${high}`;
+  const sessions=factor>7?'2–4 sesiones':factor>3.5?'1–2 sesiones':'1 sesión';
+  document.getElementById('estSessions').textContent=`Aprox. ${sessions}`;
+}
+
+function goToLead(){
+  const S=state.style?STYLES[state.style].name:'—';
+  const Z=state.zone!=null?ZONES[state.zone].n:'Por decidir';
+  const size=state.sizeIdx!=null?SIZES[state.sizeIdx].label:'Por decidir';
+  const det=state.detailIdx!=null?DETAILS[state.detailIdx].label:'Por decidir';
+  const price=document.getElementById('estPrice').textContent;
+  const tf=answers[QUESTIONS.length-1]!=null?QUESTIONS[QUESTIONS.length-1].opts[answers[QUESTIONS.length-1]].t:'Por decidir';
+  document.getElementById('leadSummary').innerHTML=
+    `<div><span>Nombre</span><span>${leadData.name}</span></div>
+     ${leadData.insta?'<div><span>Instagram</span><span>'+leadData.insta+'</span></div>':''}
+     <div><span>Email</span><span>${leadData.email}</span></div>
+     <div><span>Teléfono</span><span>${leadData.phone}</span></div>
+     <div><span>Estilo</span><span>${S}</span></div>
+     <div><span>Zona</span><span>${Z}</span></div>
+     <div><span>Tamaño</span><span>${size}</span></div>
+     <div><span>Detalle</span><span>${det}</span></div>
+     <div><span>Para cuándo</span><span>${tf}</span></div>
+     <div><span>Precio orientativo</span><span>${price&&price!=='—'?price:'A consultar'}</span></div>`;
+  goTo('stepLead');
+}
+
+function buildMessage(){
+  const S=state.style?STYLES[state.style].name:'—';
+  const Z=state.zone!=null?ZONES[state.zone].n:'Por decidir';
+  const size=state.sizeIdx!=null?SIZES[state.sizeIdx].label:'Por decidir';
+  const det=state.detailIdx!=null?DETAILS[state.detailIdx].label:'Por decidir';
+  const price=document.getElementById('estPrice').textContent;
+  const idea=document.getElementById('fIdea').value.trim();
+  const tf=answers[QUESTIONS.length-1]!=null?QUESTIONS[QUESTIONS.length-1].opts[answers[QUESTIONS.length-1]].t:'';
+  return `¡Hola ${CONFIG.studio}! Hice el test de estilo y este es mi briefing:%0A%0A`+
+    `• Nombre: ${leadData.name}%0A`+
+    `• Estilo recomendado: ${S}%0A`+
+    `• Zona: ${Z}%0A`+
+    `• Tamaño: ${size}%0A`+
+    `• Detalle: ${det}%0A`+
+    (tf?`• Para cuándo: ${tf}%0A`:'')+
+    `• Precio orientativo: ${price&&price!=='—'?price:'a consultar'}%0A`+
+    (idea?`• Mi idea: ${idea}%0A`:'')+
+    (leadData.email?`• Email: ${leadData.email}%0A`:'')+
+    (leadData.phone?`• Teléfono: ${leadData.phone}%0A`:'')+
+    (leadData.insta?`• Instagram: ${leadData.insta}%0A`:'')+
+    `%0A¿Podemos agendar una consulta? ¡Gracias!`;
+}
+
+function validLead(){
+  const ok=leadData.name&&(leadData.phone||leadData.email);
+  document.getElementById('leadErr').style.display=ok?'none':'block';
+  return ok;
+}
+function sendWhatsApp(){
+  if(!validLead())return;
+  window.open(`https://wa.me/${CONFIG.whatsapp}?text=${buildMessage()}`,'_blank');
+}
+function sendEmail(){
+  if(!validLead())return;
+  const body=buildMessage().replace(/%0A/g,'\n');
+  const subject=encodeURIComponent(`Nuevo briefing de tatuaje — ${leadData.name}`);
+  window.location.href=`mailto:${CONFIG.email}?subject=${subject}&body=${encodeURIComponent(body)}`;
+}
+function restart(){
+  answers=[];state.style=state.zone=state.sizeIdx=state.detailIdx=null;
+  document.querySelectorAll('.opt.sel,.zone.sel,.seg-btn.sel').forEach(e=>e.classList.remove('sel'));
+  document.querySelectorAll('[id^=next]').forEach(b=>b.disabled=true);
+  document.getElementById('zoneNext').disabled=true;
+  document.getElementById('zoneDetail').classList.remove('show');
+  document.getElementById('estPrice').textContent='—';
+  document.getElementById('estSessions').textContent='';
+  goTo('stepGate');
+}
+</script>
+</body>
+</html>
