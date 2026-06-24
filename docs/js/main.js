@@ -24,9 +24,104 @@
     }
   });
 
+  /* ---------- lightbox ---------- */
+  var lightbox = document.getElementById("lightbox");
+  var lightboxImg = lightbox.querySelector("img");
+  var lightboxClose = lightbox.querySelector(".lightbox__close");
+
+  function abrirLightbox(src, alt) {
+    lightboxImg.src = src;
+    lightboxImg.alt = alt;
+    lightbox.showModal();
+  }
+
+  lightboxClose.addEventListener("click", function () { lightbox.close(); });
+  lightbox.addEventListener("click", function (e) {
+    if (e.target === lightbox) lightbox.close();
+  });
+  lightbox.addEventListener("close", function () { lightboxImg.src = ""; });
+
   /* ---------- filtros de portfolio ---------- */
   var filtros = document.querySelectorAll(".filtro");
   var piezas = document.querySelectorAll(".pieza");
+  var galeria = document.querySelector(".galeria");
+  var carrusel = document.getElementById("carrusel");
+  var carruselBuilt = false;
+
+  piezas.forEach(function (pieza) {
+    pieza.addEventListener("click", function () {
+      var img = pieza.querySelector("img");
+      abrirLightbox(img.src, img.alt);
+    });
+  });
+
+  /* ---------- carrusel animado ---------- */
+  function buildCarrusel() {
+    if (carruselBuilt) return;
+    carruselBuilt = true;
+
+    var track = document.createElement("div");
+    track.className = "carrusel__track";
+
+    var snapData = [];
+
+    piezas.forEach(function (pieza) {
+      var img = pieza.querySelector("img");
+      var catEl = pieza.querySelector(".pieza__cat");
+      var item = document.createElement("button");
+      item.type = "button";
+      item.className = "carrusel__item";
+      item.setAttribute("aria-label", img.alt);
+
+      var imgEl = document.createElement("img");
+      imgEl.src = img.src;
+      imgEl.alt = img.alt;
+      imgEl.loading = "lazy";
+
+      var label = document.createElement("span");
+      label.className = "pieza__cat";
+      label.textContent = catEl ? catEl.textContent : "";
+
+      item.appendChild(imgEl);
+      item.appendChild(label);
+      item.addEventListener("click", function () { abrirLightbox(img.src, img.alt); });
+      track.appendChild(item);
+      snapData.push({ src: img.src, alt: img.alt });
+    });
+
+    /* duplicar para bucle infinito */
+    snapData.forEach(function (d, i) {
+      var orig = track.children[i];
+      var clone = orig.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      clone.addEventListener("click", function () { abrirLightbox(d.src, d.alt); });
+      track.appendChild(clone);
+    });
+
+    carrusel.appendChild(track);
+
+    /* pausa al tocar en móvil */
+    carrusel.addEventListener("touchstart", function () {
+      carrusel.classList.add("carrusel--paused");
+    }, { passive: true });
+    carrusel.addEventListener("touchend", function () {
+      setTimeout(function () { carrusel.classList.remove("carrusel--paused"); }, 1200);
+    });
+  }
+
+  function mostrarCarrusel() {
+    buildCarrusel();
+    galeria.style.display = "none";
+    carrusel.classList.add("is-active");
+  }
+
+  function mostrarGaleria(cat) {
+    carrusel.classList.remove("is-active");
+    galeria.style.display = "";
+    piezas.forEach(function (p) {
+      p.classList.toggle("is-hidden", p.dataset.cat !== cat);
+    });
+  }
 
   filtros.forEach(function (btn) {
     btn.addEventListener("click", function () {
@@ -34,31 +129,16 @@
       filtros.forEach(function (b) {
         b.setAttribute("aria-pressed", String(b === btn));
       });
-      piezas.forEach(function (p) {
-        p.classList.toggle("is-hidden", cat !== "todo" && p.dataset.cat !== cat);
-      });
+      if (cat === "todo") {
+        mostrarCarrusel();
+      } else {
+        mostrarGaleria(cat);
+      }
     });
   });
 
-  /* ---------- lightbox ---------- */
-  var lightbox = document.getElementById("lightbox");
-  var lightboxImg = lightbox.querySelector("img");
-  var lightboxClose = lightbox.querySelector(".lightbox__close");
-
-  piezas.forEach(function (pieza) {
-    pieza.addEventListener("click", function () {
-      var img = pieza.querySelector("img");
-      lightboxImg.src = img.src;
-      lightboxImg.alt = img.alt;
-      lightbox.showModal();
-    });
-  });
-
-  lightboxClose.addEventListener("click", function () { lightbox.close(); });
-  lightbox.addEventListener("click", function (e) {
-    if (e.target === lightbox) lightbox.close();
-  });
-  lightbox.addEventListener("close", function () { lightboxImg.src = ""; });
+  /* estado inicial: "Todo" activo → arrancar carrusel */
+  mostrarCarrusel();
 
   /* ---------- año del footer ---------- */
   document.getElementById("year").textContent = String(new Date().getFullYear());
