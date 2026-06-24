@@ -517,7 +517,10 @@ body::after {
   mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
 }
-.carrusel.is-active { display: block; }
+.carrusel.is-active { display: block; cursor: grab; }
+.carrusel--dragging,
+.carrusel--dragging * { cursor: grabbing !important; }
+.carrusel--dragging { user-select: none; }
 
 /* brasa atmosférica en la base */
 .carrusel::after {

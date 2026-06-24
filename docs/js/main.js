@@ -99,14 +99,125 @@
     });
 
     carrusel.appendChild(track);
+    setupCarruselDrag(track);
+  }
 
-    /* pausa al tocar en móvil */
-    carrusel.addEventListener("touchstart", function () {
-      carrusel.classList.add("carrusel--paused");
-    }, { passive: true });
-    carrusel.addEventListener("touchend", function () {
-      setTimeout(function () { carrusel.classList.remove("carrusel--paused"); }, 1200);
+  /* ---------- drag de ratón y swipe táctil en el carrusel ---------- */
+  function setupCarruselDrag(track) {
+    var DURATION = 70; // segundos — debe coincidir con el CSS
+    var isDragging = false;
+    var startX = 0;
+    var startOffset = 0;
+    var lastX = 0;
+    var lastT = 0;
+    var velX = 0;
+    var touchStartY = 0;
+    var isHorizontal = null;
+
+    function getHalfWidth() { return track.scrollWidth / 2; }
+
+    function getComputedX() {
+      var m = new DOMMatrix(window.getComputedStyle(track).transform);
+      return m.m41;
+    }
+
+    function wrapX(x) {
+      var hw = getHalfWidth();
+      x = x % hw;
+      if (x > 0) x -= hw;
+      return x;
+    }
+
+    function applyX(x) {
+      track.style.transform = "translateX(" + wrapX(x) + "px)";
+    }
+
+    function resumeFrom(x) {
+      var hw = getHalfWidth();
+      x = wrapX(x);
+      track.style.animationDelay = -((-x / hw) * DURATION) + "s";
+      track.style.transform = "";
+      track.style.animationPlayState = ""; /* quita inline, el CSS hover toma el control */
+      carrusel.classList.remove("carrusel--dragging");
+    }
+
+    function onStart(clientX, clientY) {
+      isDragging = true;
+      isHorizontal = null;
+      startX = clientX;
+      touchStartY = clientY || 0;
+      startOffset = getComputedX();
+      lastX = clientX;
+      lastT = performance.now();
+      velX = 0;
+      track.style.animationPlayState = "paused";
+      carrusel.classList.add("carrusel--dragging");
+    }
+
+    function onMove(clientX, clientY) {
+      if (!isDragging) return;
+      /* detectar dirección del gesto en el primer movimiento */
+      if (isHorizontal === null) {
+        var dx = Math.abs(clientX - startX);
+        var dy = Math.abs((clientY || touchStartY) - touchStartY);
+        if (dx < 4 && dy < 4) return; /* aún no hay movimiento suficiente */
+        isHorizontal = dx >= dy;
+        if (!isHorizontal) { /* gesto vertical → cancelar drag */
+          isDragging = false;
+          resumeFrom(startOffset);
+          return;
+        }
+      }
+      var now = performance.now();
+      var dt = now - lastT;
+      if (dt > 0) velX = (clientX - lastX) / dt;
+      lastX = clientX;
+      lastT = now;
+      applyX(startOffset + (clientX - startX));
+    }
+
+    function onEnd() {
+      if (!isDragging) return;
+      isDragging = false;
+      var endX = startOffset + (lastX - startX);
+      var momentum = Math.max(-300, Math.min(300, velX * 160));
+      resumeFrom(endX + momentum);
+    }
+
+    /* ratón */
+    track.addEventListener("mousedown", function (e) {
+      e.preventDefault();
+      onStart(e.clientX, e.clientY);
     });
+    document.addEventListener("mousemove", function (e) {
+      if (isDragging) onMove(e.clientX, e.clientY);
+    });
+    document.addEventListener("mouseup", function () {
+      if (isDragging) onEnd();
+    });
+
+    /* toque */
+    track.addEventListener("touchstart", function (e) {
+      onStart(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+    track.addEventListener("touchmove", function (e) {
+      if (!isDragging) return;
+      var t = e.touches[0];
+      var dx = Math.abs(t.clientX - startX);
+      var dy = Math.abs(t.clientY - touchStartY);
+      if (isHorizontal === null && (dx >= 4 || dy >= 4)) {
+        isHorizontal = dx >= dy;
+      }
+      if (isHorizontal) e.preventDefault();
+      onMove(t.clientX, t.clientY);
+    }, { passive: false });
+    track.addEventListener("touchend", onEnd);
+    track.addEventListener("touchcancel", onEnd);
+
+    /* click: solo abrir lightbox si no hubo arrastre */
+    track.addEventListener("click", function (e) {
+      if (Math.abs(lastX - startX) > 6) e.stopPropagation();
+    }, true);
   }
 
   function mostrarCarrusel() {
