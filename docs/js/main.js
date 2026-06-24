@@ -104,22 +104,17 @@
 
   /* ---------- drag de ratón y swipe táctil en el carrusel ---------- */
   function setupCarruselDrag(track) {
-    var DURATION = 70; // segundos — debe coincidir con el CSS
-    var isDragging = false;
-    var startX = 0;
+    var DURATION    = 70;   // segundos — debe coincidir con el CSS
+    var isDragging  = false;
+    var decRafId    = null;
+    var startX      = 0;
     var startOffset = 0;
-    var lastX = 0;
-    var lastT = 0;
-    var velX = 0;
+    var currentDragX = 0;
     var touchStartY = 0;
     var isHorizontal = null;
+    var velBuffer   = []; /* {x, t} de los últimos ~100ms */
 
     function getHalfWidth() { return track.scrollWidth / 2; }
-
-    function getComputedX() {
-      var m = new DOMMatrix(window.getComputedStyle(track).transform);
-      return m.m41;
-    }
 
     function wrapX(x) {
       var hw = getHalfWidth();
@@ -128,60 +123,105 @@
       return x;
     }
 
-    function applyX(x) {
-      track.style.transform = "translateX(" + wrapX(x) + "px)";
+    function setX(x) {
+      track.style.transform = "translateX(" + wrapX(x).toFixed(1) + "px)";
     }
 
-    function resumeFrom(x) {
+    /* pausa la animación ANTES de leer — getComputedStyle fuerza recálculo
+       y devuelve la posición exacta del fotograma pausado, sin salto */
+    function captureAndPause() {
+      track.style.animationPlayState = "paused";
+      return new DOMMatrix(window.getComputedStyle(track).transform).m41;
+    }
+
+    function resumeAt(x) {
       var hw = getHalfWidth();
       x = wrapX(x);
-      track.style.animationDelay = -((-x / hw) * DURATION) + "s";
-      track.style.transform = "";
-      track.style.animationPlayState = ""; /* quita inline, el CSS hover toma el control */
-      carrusel.classList.remove("carrusel--dragging");
+      /* todo en la misma microtarea → el navegador lo batchea, sin parpadeo */
+      track.style.animationDelay      = -((-x / hw) * DURATION) + "s";
+      track.style.transform           = "";
+      track.style.animationPlayState  = ""; /* CSS hover recupera el control */
+    }
+
+    function getVelocity() {
+      var now    = performance.now();
+      var recent = velBuffer.filter(function (s) { return now - s.t < 80; });
+      if (recent.length < 2) return 0;
+      var first = recent[0], last = recent[recent.length - 1];
+      var dt = last.t - first.t;
+      return dt > 0 ? (last.x - first.x) / dt : 0;
     }
 
     function onStart(clientX, clientY) {
-      isDragging = true;
+      /* cancelar cualquier deceleración en curso */
+      if (decRafId) { cancelAnimationFrame(decRafId); decRafId = null; }
+
+      startOffset  = captureAndPause(); /* pausa + posición real, sin salto */
+      currentDragX = startOffset;
+      startX       = clientX;
+      touchStartY  = clientY || 0;
       isHorizontal = null;
-      startX = clientX;
-      touchStartY = clientY || 0;
-      startOffset = getComputedX();
-      lastX = clientX;
-      lastT = performance.now();
-      velX = 0;
-      track.style.animationPlayState = "paused";
+      isDragging   = true;
+      velBuffer    = [];
       carrusel.classList.add("carrusel--dragging");
     }
 
     function onMove(clientX, clientY) {
       if (!isDragging) return;
-      /* detectar dirección del gesto en el primer movimiento */
+
       if (isHorizontal === null) {
-        var dx = Math.abs(clientX - startX);
-        var dy = Math.abs((clientY || touchStartY) - touchStartY);
-        if (dx < 4 && dy < 4) return; /* aún no hay movimiento suficiente */
-        isHorizontal = dx >= dy;
-        if (!isHorizontal) { /* gesto vertical → cancelar drag */
+        var adx = Math.abs(clientX - startX);
+        var ady = Math.abs((clientY || touchStartY) - touchStartY);
+        if (adx < 5 && ady < 5) return;
+        isHorizontal = adx >= ady;
+        if (!isHorizontal) {
           isDragging = false;
-          resumeFrom(startOffset);
+          resumeAt(startOffset);
+          carrusel.classList.remove("carrusel--dragging");
           return;
         }
       }
+
       var now = performance.now();
-      var dt = now - lastT;
-      if (dt > 0) velX = (clientX - lastX) / dt;
-      lastX = clientX;
-      lastT = now;
-      applyX(startOffset + (clientX - startX));
+      velBuffer.push({ x: clientX, t: now });
+      while (velBuffer.length > 1 && now - velBuffer[0].t > 120) velBuffer.shift();
+
+      currentDragX = startOffset + (clientX - startX);
+      setX(currentDragX);
     }
 
     function onEnd() {
       if (!isDragging) return;
       isDragging = false;
-      var endX = startOffset + (lastX - startX);
-      var momentum = Math.max(-300, Math.min(300, velX * 160));
-      resumeFrom(endX + momentum);
+      carrusel.classList.remove("carrusel--dragging");
+
+      var vel      = getVelocity();            /* px/ms promediado sobre 80ms */
+      var momentum = vel * 220;
+      momentum = Math.max(-500, Math.min(500, momentum));
+
+      if (Math.abs(momentum) < 8) { resumeAt(currentDragX); return; }
+
+      /* deceleración ease-out quart en JS → entrega suave a la animación CSS */
+      var fromX    = currentDragX;
+      var toX      = fromX + momentum;
+      var t0       = performance.now();
+      var decMs    = Math.min(700, Math.max(180, Math.abs(momentum) * 1.1));
+
+      function decTick(now) {
+        var p    = Math.min(1, (now - t0) / decMs);
+        var ease = 1 - Math.pow(1 - p, 4); /* ease-out quart */
+        var x    = fromX + (toX - fromX) * ease;
+        setX(x);
+
+        if (p < 1) {
+          decRafId = requestAnimationFrame(decTick);
+        } else {
+          decRafId = null;
+          resumeAt(x);
+        }
+      }
+
+      decRafId = requestAnimationFrame(decTick);
     }
 
     /* ratón */
@@ -193,7 +233,7 @@
       if (isDragging) onMove(e.clientX, e.clientY);
     });
     document.addEventListener("mouseup", function () {
-      if (isDragging) onEnd();
+      if (isDragging || decRafId) onEnd();
     });
 
     /* toque */
@@ -202,21 +242,19 @@
     }, { passive: true });
     track.addEventListener("touchmove", function (e) {
       if (!isDragging) return;
-      var t = e.touches[0];
-      var dx = Math.abs(t.clientX - startX);
-      var dy = Math.abs(t.clientY - touchStartY);
-      if (isHorizontal === null && (dx >= 4 || dy >= 4)) {
-        isHorizontal = dx >= dy;
-      }
+      var t   = e.touches[0];
+      var adx = Math.abs(t.clientX - startX);
+      var ady = Math.abs(t.clientY - touchStartY);
+      if (isHorizontal === null && (adx >= 5 || ady >= 5)) isHorizontal = adx >= ady;
       if (isHorizontal) e.preventDefault();
       onMove(t.clientX, t.clientY);
     }, { passive: false });
-    track.addEventListener("touchend", onEnd);
+    track.addEventListener("touchend",   onEnd);
     track.addEventListener("touchcancel", onEnd);
 
-    /* click: solo abrir lightbox si no hubo arrastre */
+    /* click: cancelar si hubo arrastre real */
     track.addEventListener("click", function (e) {
-      if (Math.abs(lastX - startX) > 6) e.stopPropagation();
+      if (Math.abs(currentDragX - startOffset) > 8) e.stopPropagation();
     }, true);
   }
 
