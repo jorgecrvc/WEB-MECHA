@@ -220,13 +220,63 @@
     }, true);
   }
 
+  /* ---------- efecto foco: imagen central amplificada ---------- */
+  var focoRafId = null;
+
+  function iniciarFocoCarrusel() {
+    if (focoRafId || reduced) return;
+    var track = carrusel.querySelector(".carrusel__track");
+    if (!track) return;
+
+    function tick() {
+      if (!carrusel.classList.contains("is-active")) { focoRafId = null; return; }
+
+      var cr  = carrusel.getBoundingClientRect();
+      var cx  = cr.left + cr.width / 2;
+      var items = track.children;
+      var rects = [];
+      var i;
+
+      /* lectura en lote (evita thrashing) */
+      for (i = 0; i < items.length; i++) rects.push(items[i].getBoundingClientRect());
+
+      /* escritura en lote */
+      var range = cr.width * 0.58;
+      for (i = 0; i < items.length; i++) {
+        var ic   = rects[i].left + rects[i].width / 2;
+        var dist = Math.abs(ic - cx);
+        var t    = Math.max(0, 1 - dist / range);
+        var s    = t * t * (3 - 2 * t); /* smoothstep: pop suave en el centro */
+
+        items[i].style.transform = "scale(" + (0.80 + s * 0.26).toFixed(3) + ")";
+        items[i].style.opacity   = (0.38 + s * 0.62).toFixed(3);
+        items[i].style.zIndex    = Math.round(s * 10);
+      }
+
+      focoRafId = requestAnimationFrame(tick);
+    }
+
+    focoRafId = requestAnimationFrame(tick);
+  }
+
+  function detenerFocoCarrusel() {
+    if (focoRafId) { cancelAnimationFrame(focoRafId); focoRafId = null; }
+    carrusel.querySelectorAll(".carrusel__item").forEach(function (item) {
+      item.style.transform = "";
+      item.style.opacity   = "";
+      item.style.zIndex    = "";
+    });
+  }
+
   function mostrarCarrusel() {
     buildCarrusel();
     galeria.style.display = "none";
     carrusel.classList.add("is-active");
+    iniciarFocoCarrusel();
   }
 
   function mostrarGaleria(cat) {
+    detenerFocoCarrusel();
     carrusel.classList.remove("is-active");
     galeria.style.display = "";
     piezas.forEach(function (p) {

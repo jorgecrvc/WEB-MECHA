@@ -536,6 +536,8 @@ body::after {
   width: max-content;
   will-change: transform;
   animation: carrusel-avanzar 70s linear infinite;
+  /* contexto de apilamiento para que z-index de items funcione */
+  isolation: isolate;
 }
 
 .carrusel:hover .carrusel__track,
@@ -560,6 +562,8 @@ body::after {
   padding: 0;
   display: block;
   transition: border-color .35s ease-out, box-shadow .35s ease-out;
+  will-change: transform, opacity;
+  transform-origin: center center;
 }
 .carrusel__item:hover {
   border-color: var(--rojo-borde);
