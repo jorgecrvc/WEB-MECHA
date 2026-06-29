@@ -494,12 +494,11 @@ body::after {
   font-size: clamp(2.4rem, 6vw, 4.2rem);
   letter-spacing: .04em; text-transform: uppercase;
   line-height: 1; white-space: nowrap;
-  color: transparent;
-  -webkit-text-stroke: 1px var(--rojo-borde);
+  color: var(--ember);
   will-change: transform;
 }
-.marquee__track b { font-weight: 700; color: var(--rojo); -webkit-text-stroke: 0; }
-.marquee--invertida .marquee__track { -webkit-text-stroke: 1px rgba(239,194,154,.45); }
+.marquee__track b { font-weight: 700; color: var(--ember); }
+.marquee--invertida .marquee__track { color: rgba(239,194,154,.45); }
 .marquee--invertida .marquee__track b { color: var(--crema); }
 
 /* manifiesto que se enciende palabra a palabra */
